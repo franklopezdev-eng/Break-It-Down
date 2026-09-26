@@ -1,0 +1,341 @@
+/* The key-moments sidebar: analysis card, sensitivity, and the list of sections. */
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: var(--r-xl);
+}
+.panel__head {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 16px 8px 22px;
+}
+.panel__spacer {
+  flex: 1;
+}
+.panel__body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 4px 12px 14px;
+}
+.panel__empty {
+  padding: 4px 12px 12px;
+}
+.badge {
+  display: inline-grid;
+  place-items: center;
+  min-width: 24px;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: var(--r-pill);
+  background: color-mix(in srgb, var(--moment) 16%, transparent);
+  color: var(--moment);
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+/* ── Analysis ────────────────────────────────────────────────────────────── */
+.analysis {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  border-radius: var(--r-lg);
+  background: var(--fill-4);
+  box-shadow: inset 0 0 0 0.5px var(--separator);
+}
+.analysis--done {
+  display: block;
+  padding: 12px 12px 12px 14px;
+}
+.analysis__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.analysis__spark {
+  color: var(--moment);
+}
+.analysis__percent {
+  margin-left: auto;
+  font-weight: 600;
+  color: var(--label-2);
+}
+.progress {
+  height: 6px;
+  overflow: hidden;
+  border-radius: var(--r-pill);
+  background: var(--fill-2);
+}
+.progress__bar {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--pink), var(--purple), var(--blue));
+  transition: width 0.3s var(--ease);
+}
+.analysis__body {
+  display: grid;
+  grid-template-columns: 116px minmax(0, 1fr);
+  gap: 14px;
+  align-items: center;
+}
+.preview {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #000;
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.2);
+}
+.preview__frame,
+.preview__overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.preview__frame {
+  object-fit: cover;
+}
+.steps {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.step {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13.5px;
+}
+.step__icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+  border: 1.5px solid var(--label-4);
+  border-radius: 50%;
+}
+.step--active .step__icon {
+  border-color: transparent;
+}
+.step--done .step__icon {
+  border-color: transparent;
+  background: var(--green);
+  color: #fff;
+}
+.step--pending,
+.step--skipped {
+  color: var(--label-3);
+}
+.step__label {
+  display: block;
+  font-weight: 500;
+}
+.step__detail {
+  display: block;
+  color: var(--label-2);
+}
+.analysis__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.analysis__summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.analysis__badge {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 11px;
+  background: linear-gradient(135deg, #ff5c8a, #b44dff);
+  color: #fff;
+}
+.analysis__text {
+  flex: 1;
+  min-width: 0;
+}
+.analysis__note {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin-top: 10px;
+  padding-top: 10px;
+  box-shadow: 0 -0.5px 0 var(--separator);
+}
+.analysis__note svg {
+  flex: none;
+  margin-top: 2px;
+}
+
+/* ── Sensitivity ─────────────────────────────────────────────────────────── */
+.sensitivity {
+  display: grid;
+  gap: 2px;
+  padding: 2px 8px 0;
+}
+.sensitivity__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.sensitivity__ends {
+  display: flex;
+  justify-content: space-between;
+  margin-top: -4px;
+}
+.sensitivity .setting {
+  margin: 4px -10px 0;
+}
+
+/* ── The list ────────────────────────────────────────────────────────────── */
+.moments {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.moment {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 8px 6px 6px;
+  border-radius: 16px;
+  transition: background-color var(--t-fast) var(--ease);
+}
+.moment:hover {
+  background: var(--fill-4);
+}
+.moment[data-active='true'] {
+  background: color-mix(in srgb, var(--accent) 13%, transparent);
+}
+.moment__main {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 12px;
+  background: none;
+  text-align: left;
+}
+.moment__thumb {
+  position: relative;
+  flex: none;
+  height: 46px;
+  overflow: hidden;
+  border-radius: 10px;
+  background: var(--fill-2);
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.14);
+}
+.moment__thumb img,
+.moment__thumb-empty {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.moment__thumb-empty {
+  background: linear-gradient(110deg, var(--fill-3) 30%, var(--fill-2) 50%, var(--fill-3) 70%);
+  background-size: 200% 100%;
+  animation: skeleton 1.4s linear infinite;
+}
+@keyframes skeleton {
+  to {
+    background-position-x: -200%;
+  }
+}
+.moment__num {
+  position: absolute;
+  left: 4px;
+  bottom: 4px;
+  display: grid;
+  place-items: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  background: rgba(0, 0, 0, 0.55);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+}
+.moment__text {
+  display: block;
+  min-width: 0;
+}
+.moment__title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 14.5px;
+  font-weight: 600;
+  letter-spacing: -0.012em;
+}
+.moment__kind {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
+  background: color-mix(in srgb, var(--moment) 14%, transparent);
+  color: var(--moment);
+}
+.moment[data-kind='manual'] .moment__kind {
+  background: color-mix(in srgb, var(--manual) 16%, transparent);
+  color: var(--manual);
+}
+.moment[data-kind='start'] .moment__kind {
+  background: var(--fill-3);
+  color: var(--label-2);
+}
+.moment__meta {
+  display: block;
+  margin-top: 1px;
+  font-size: 12.5px;
+  color: var(--label-2);
+}
+.moment__actions {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 2px;
+}
+.moment__remove {
+  opacity: 0;
+}
+.moment:hover .moment__remove,
+.moment:focus-within .moment__remove {
+  opacity: 1;
+}
+@media (hover: none) {
+  .moment__remove {
+    opacity: 0.6;
+  }
+}
+
+/* Setting rows inside the sidebar */
+.setting[data-disabled] {
+  opacity: 0.5;
+}

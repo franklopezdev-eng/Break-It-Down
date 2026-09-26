@@ -1,0 +1,22 @@
+# dependencies
+node_modules/
+
+# build output
+dist/
+*.tsbuildinfo
+
+# generated / optional assets (see scripts/)
+public/mediapipe/
+public/models/
+
+# logs & OS cruft
+*.log
+.DS_Store
+Thumbs.db
+
+# local env & editor state
+.env
+.env.*
+.vscode/*
+!.vscode/extensions.json
+.idea/

@@ -1,0 +1,187 @@
+/*
+ * Design tokens.
+ *
+ * Colours follow Apple's Human Interface Guidelines system palette, in both
+ * appearances. Materials imitate the translucent "glass" used across iOS/macOS 26:
+ * blurred, saturated backdrops with a hairline edge and a soft specular highlight.
+ */
+
+:root {
+  color-scheme: light dark;
+
+  /* ── Type ─────────────────────────────────────────────────────────────── */
+  /* SF Pro on Apple platforms; Inter (bundled) everywhere else. */
+  --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', 'Inter Variable', Inter,
+    system-ui, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* ── System colours (light) ───────────────────────────────────────────── */
+  --blue: #007aff;
+  --green: #34c759;
+  --indigo: #5856d6;
+  --orange: #ff9500;
+  --pink: #ff2d55;
+  --purple: #af52de;
+  --red: #ff3b30;
+  --teal: #30b0c7;
+  --yellow: #ffcc00;
+
+  --accent: var(--blue);
+  --on-accent: #fff;
+  /** Key moments: the app's signature colour, echoing the icon gradient. */
+  --moment: var(--pink);
+  --manual: var(--orange);
+
+  /* ── Surfaces & labels (light) ────────────────────────────────────────── */
+  --bg: #f2f2f7;
+  --surface: #ffffff;
+  --surface-2: #f2f2f7;
+  --label: #000000;
+  --label-2: rgba(60, 60, 67, 0.62);
+  --label-3: rgba(60, 60, 67, 0.34);
+  --label-4: rgba(60, 60, 67, 0.18);
+  --separator: rgba(60, 60, 67, 0.16);
+  --fill: rgba(120, 120, 128, 0.2);
+  --fill-2: rgba(120, 120, 128, 0.16);
+  --fill-3: rgba(120, 120, 128, 0.12);
+  --fill-4: rgba(120, 120, 128, 0.08);
+
+  /* ── Materials ────────────────────────────────────────────────────────── */
+  --glass: rgba(255, 255, 255, 0.6);
+  --glass-strong: rgba(255, 255, 255, 0.82);
+  --glass-solid: #ffffff;
+  --glass-stroke: rgba(255, 255, 255, 0.75);
+  --glass-edge: rgba(0, 0, 0, 0.06);
+  --glass-highlight: rgba(255, 255, 255, 0.95);
+  --bar: rgba(242, 242, 247, 0.72);
+  --blur: 28px;
+  --saturate: 180%;
+  --shadow-float: 0 1px 2px rgba(0, 0, 0, 0.04), 0 10px 34px -6px rgba(20, 20, 40, 0.16);
+  --shadow-pop: 0 2px 6px rgba(0, 0, 0, 0.06), 0 22px 60px -12px rgba(20, 20, 40, 0.28);
+  --scrim: rgba(0, 0, 0, 0.32);
+  --ambient-opacity: 0.32;
+
+  /* ── Waveform / timeline ──────────────────────────────────────────────── */
+  --wave: rgba(60, 60, 67, 0.26);
+  --wave-played: var(--accent);
+  --track: rgba(120, 120, 128, 0.12);
+
+  /* ── Shape ────────────────────────────────────────────────────────────── */
+  --r-xs: 8px;
+  --r-sm: 12px;
+  --r-md: 16px;
+  --r-lg: 22px;
+  --r-xl: 28px;
+  --r-pill: 999px;
+
+  /* ── Space (4 pt grid) ────────────────────────────────────────────────── */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 20px;
+  --s-6: 24px;
+  --s-8: 32px;
+
+  /* ── Motion ───────────────────────────────────────────────────────────── */
+  --ease: cubic-bezier(0.32, 0.72, 0, 1);
+  --spring: cubic-bezier(0.34, 1.4, 0.64, 1);
+  --t-fast: 150ms;
+  --t-med: 280ms;
+  --t-slow: 520ms;
+
+  /* ── Layout ───────────────────────────────────────────────────────────── */
+  --toolbar-h: 60px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+}
+
+/* A gentle overshoot, where the browser supports spring-like easing curves. */
+@supports (transition-timing-function: linear(0, 1)) {
+  :root {
+    --spring: linear(0, 0.16 7%, 0.48 16%, 0.78 27%, 0.95 38%, 1.03 50%, 1.04 60%, 1.02 72%, 1 100%);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --blue: #0a84ff;
+    --green: #30d158;
+    --indigo: #5e5ce6;
+    --orange: #ff9f0a;
+    --pink: #ff375f;
+    --purple: #bf5af2;
+    --red: #ff453a;
+    --teal: #40c8e0;
+    --yellow: #ffd60a;
+
+    --bg: #000000;
+    --surface: #1c1c1e;
+    --surface-2: #2c2c2e;
+    --label: #ffffff;
+    --label-2: rgba(235, 235, 245, 0.62);
+    --label-3: rgba(235, 235, 245, 0.34);
+    --label-4: rgba(235, 235, 245, 0.18);
+    --separator: rgba(84, 84, 88, 0.55);
+    --fill: rgba(120, 120, 128, 0.36);
+    --fill-2: rgba(120, 120, 128, 0.32);
+    --fill-3: rgba(120, 120, 128, 0.24);
+    --fill-4: rgba(120, 120, 128, 0.18);
+
+    --glass: rgba(44, 44, 48, 0.56);
+    --glass-strong: rgba(36, 36, 40, 0.86);
+    --glass-solid: #2c2c2e;
+    --glass-stroke: rgba(255, 255, 255, 0.16);
+    --glass-edge: rgba(0, 0, 0, 0.5);
+    --glass-highlight: rgba(255, 255, 255, 0.28);
+    --bar: rgba(10, 10, 12, 0.66);
+    --shadow-float: 0 1px 2px rgba(0, 0, 0, 0.4), 0 14px 40px -8px rgba(0, 0, 0, 0.6);
+    --shadow-pop: 0 2px 8px rgba(0, 0, 0, 0.5), 0 26px 70px -12px rgba(0, 0, 0, 0.75);
+    --scrim: rgba(0, 0, 0, 0.55);
+    --ambient-opacity: 0.5;
+
+    --wave: rgba(235, 235, 245, 0.26);
+    --track: rgba(120, 120, 128, 0.24);
+  }
+}
+
+/* Honour "Reduce Transparency": swap blur for solid material. */
+@media (prefers-reduced-transparency: reduce) {
+  :root {
+    --glass: var(--glass-solid);
+    --glass-strong: var(--glass-solid);
+    --bar: var(--bg);
+    --blur: 0px;
+    --saturate: 100%;
+    --ambient-opacity: 0;
+  }
+}
+
+/* Honour "Increase Contrast": firmer edges and text. */
+@media (prefers-contrast: more) {
+  :root {
+    --label-2: color-mix(in srgb, var(--label) 82%, transparent);
+    --label-3: color-mix(in srgb, var(--label) 58%, transparent);
+    --separator: color-mix(in srgb, var(--label) 34%, transparent);
+    --glass-stroke: color-mix(in srgb, var(--label) 36%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --t-fast: 1ms;
+    --t-med: 1ms;
+    --t-slow: 1ms;
+    --spring: linear;
+    --ease: linear;
+  }
+}
+
+/* Touch targets grow to Apple's 44 pt minimum on coarse pointers. */
+@media (pointer: coarse) {
+  :root {
+    --toolbar-h: 64px;
+  }
+}

@@ -1,0 +1,338 @@
+/*
+ * The stage: reference video and mirror.
+ *
+ * Panes are sized from their aspect ratios so nothing is letterboxed: in a split,
+ * both share one height, and that height is whatever lets them fit side by side.
+ * Container-query units (cqw/cqh) make this pure CSS.
+ */
+
+.stage {
+  --gap: 16px;
+  min-height: 0;
+  container-type: size;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap);
+}
+
+.pane {
+  position: relative;
+  flex: none;
+  /* Lets the placeholder content adapt to how much room the pane actually has. */
+  container: pane / size;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: var(--r-xl);
+  background: #000;
+  box-shadow:
+    0 0 0 0.5px rgba(255, 255, 255, 0.1),
+    0 34px 60px -30px rgba(0, 0, 0, 0.55),
+    0 8px 22px -10px rgba(0, 0, 0, 0.3);
+}
+.pane--video {
+  --ar: var(--ar-video);
+}
+.pane--mirror {
+  --ar: var(--ar-mirror);
+}
+
+/* Layouts */
+.stage[data-layout='split'] .pane {
+  aspect-ratio: var(--ar);
+  height: min(100cqh, calc((100cqw - var(--gap)) / (var(--ar-video) + var(--ar-mirror))));
+}
+/* Stacked: each pane gets half the height (less the gap), capped by the stage width. */
+.stage[data-layout='split'][data-arrange='column'] {
+  flex-direction: column;
+}
+.stage[data-layout='split'][data-arrange='column'] .pane {
+  height: auto;
+  width: min(100cqw, calc((100cqh - var(--gap)) / 2 * var(--ar)));
+}
+.stage[data-layout='video'] .pane--video {
+  aspect-ratio: var(--ar-video);
+  height: min(100cqh, calc(100cqw / var(--ar-video)));
+}
+.stage[data-layout='video'] .pane--mirror {
+  display: none;
+}
+.stage[data-layout='mirror'] .pane--video {
+  display: none;
+}
+.stage[data-layout='mirror'] .pane--mirror {
+  aspect-ratio: var(--ar-mirror);
+  height: min(100cqh, calc(100cqw / var(--ar-mirror)));
+}
+.stage[data-layout='overlay'] {
+  display: grid;
+  place-items: center;
+}
+.stage[data-layout='overlay'] .pane {
+  grid-area: 1 / 1;
+  aspect-ratio: var(--ar-video);
+  height: min(100cqh, calc(100cqw / var(--ar-video)));
+}
+.stage[data-layout='overlay'] .pane--mirror {
+  z-index: 1;
+}
+.stage[data-layout='overlay'] .pane--video {
+  z-index: 2;
+  background: transparent;
+  box-shadow: none;
+}
+/* Beneath the video, the mirror's own labels would be hidden; the toolbar shows camera state. */
+.stage[data-layout='overlay'] .pane--mirror .pane__label,
+.stage[data-layout='overlay'] .pane--mirror .pane__live {
+  display: none;
+}
+
+/* Media */
+.pane__flip {
+  position: absolute;
+  inset: 0;
+  transition: opacity var(--t-med) var(--ease);
+}
+.pane--video[data-flipped='true'] .pane__flip {
+  transform: scaleX(-1);
+}
+.pane__media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
+}
+.pane--video .pane__media {
+  cursor: pointer;
+}
+.pane--mirror .pane__media {
+  object-fit: cover;
+}
+.pane__media.is-mirrored {
+  transform: scaleX(-1);
+}
+.pane--mirror:not([data-status='live']) .pane__media {
+  visibility: hidden;
+}
+.pane__skeleton {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* Overlays drawn on the panes: dark glass so they read on any footage. */
+.pane__label,
+.pane__live,
+.pane__hint {
+  position: absolute;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 12px;
+  border-radius: var(--r-pill);
+  background: rgba(20, 20, 24, 0.42);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  backdrop-filter: blur(18px) saturate(180%);
+  box-shadow: inset 0 0 0 0.5px rgba(255, 255, 255, 0.18);
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  pointer-events: none;
+}
+.pane__label {
+  top: 12px;
+  left: 12px;
+  display: block;
+  max-width: calc(100% - 104px); /* leave room for the Live badge */
+  overflow: hidden;
+  line-height: 28px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pane__live {
+  top: 12px;
+  right: 12px;
+}
+.pane__live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--green) 30%, transparent);
+  animation: live-pulse 2s ease-in-out infinite;
+}
+@keyframes live-pulse {
+  50% {
+    box-shadow: 0 0 0 5px color-mix(in srgb, var(--green) 10%, transparent);
+  }
+}
+
+/* Big centre play button, shown while paused. */
+.pane__play {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  margin: auto;
+  width: 78px;
+  height: 78px;
+  display: grid;
+  place-items: center;
+  padding: 0 0 0 4px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(30, 30, 34, 0.38);
+  -webkit-backdrop-filter: blur(22px) saturate(180%);
+  backdrop-filter: blur(22px) saturate(180%);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22), 0 10px 30px rgba(0, 0, 0, 0.35);
+  color: #fff;
+  opacity: 0;
+  transform: scale(1.35);
+  pointer-events: none;
+  transition:
+    opacity var(--t-med) var(--ease),
+    transform var(--t-med) var(--spring);
+}
+.pane__play[data-visible='true'] {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+.pane__play:active {
+  transform: scale(0.92);
+}
+
+@media (max-width: 640px) {
+  .pane__play {
+    width: 60px;
+    height: 60px;
+  }
+  .pane__play svg {
+    width: 26px;
+    height: 26px;
+  }
+}
+
+/* Overlay mode without a live camera: explain, and offer the fix. */
+.pane__hint {
+  bottom: 14px;
+  left: 50%;
+  height: auto;
+  min-height: 34px;
+  padding: 6px 8px 6px 14px;
+  transform: translateX(-50%);
+  pointer-events: auto;
+  white-space: nowrap;
+}
+.pane__hint .btn {
+  height: 26px;
+  padding: 0 12px;
+  font-size: 12.5px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #111;
+}
+
+/* Mirror placeholder */
+.pane__empty {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 10px;
+  padding: 24px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.94);
+  background:
+    radial-gradient(120% 90% at 20% 0%, rgba(94, 92, 230, 0.4), transparent 60%),
+    radial-gradient(100% 80% at 95% 100%, rgba(255, 55, 95, 0.28), transparent 58%), #0b0b10;
+}
+.pane__empty-icon {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 4px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+.pane__empty-body {
+  max-width: 30ch;
+  margin-bottom: 8px;
+  color: rgba(255, 255, 255, 0.66);
+}
+.pane__empty {
+  overflow-y: auto; /* last resort if even the compact layout can't fit */
+}
+
+/* Smaller panes (phones, stacked layouts): tighten the placeholder so nothing is clipped. */
+@container pane (max-height: 320px) {
+  .pane__empty {
+    gap: 6px;
+    padding: 14px 18px;
+  }
+  .pane__empty-icon {
+    width: 44px;
+    height: 44px;
+    margin-bottom: 0;
+    border-radius: 14px;
+  }
+  .pane__empty-icon svg {
+    width: 22px;
+    height: 22px;
+  }
+  .pane__empty-body {
+    margin-bottom: 4px;
+    font-size: 12px;
+    line-height: 1.35;
+  }
+  .pane__empty .btn {
+    height: 34px;
+    padding: 0 16px;
+    font-size: 14px;
+  }
+}
+@container pane (max-height: 210px) {
+  .pane__empty-icon {
+    display: none;
+  }
+  .pane__empty .btn--plain {
+    display: none;
+  }
+}
+.pane__empty .btn--tinted {
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+}
+.pane__empty .btn--plain {
+  color: rgba(255, 255, 255, 0.78);
+}
+.pane__empty .btn--plain:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+.pane__empty .spinner {
+  border-color: rgba(255, 255, 255, 0.2);
+  border-top-color: #fff;
+}
+.spinner--lg {
+  width: 30px;
+  height: 30px;
+  border-width: 3px;
+}
+.spinner--sm {
+  width: 14px;
+  height: 14px;
+  border-width: 2px;
+}
+.spinner--on-accent {
+  border-color: rgba(255, 255, 255, 0.35);
+  border-top-color: #fff;
+}
