@@ -122,7 +122,6 @@ function MomentRow({
   const src = useThumbnail(video, row.time);
   const looping = usePlayer((s) => s.loop.enabled && Math.abs(s.loop.start - row.time) < 0.05 && Math.abs(s.loop.end - end) < 0.05);
   const li = useRef<HTMLLIElement>(null);
-  const aspect = video.info.width / video.info.height;
 
   // Keep the current section visible while the video plays.
   useEffect(() => {
@@ -138,7 +137,7 @@ function MomentRow({
         title={KIND_HINT[row.kind]}
         onClick={() => player.jumpToKeyPoint(row.time)}
       >
-        <span className="moment__thumb" style={{ aspectRatio: String(Math.min(Math.max(aspect, 0.6), 1.8)) }}>
+        <span className="moment__thumb" style={{ aspectRatio: 9 / 16}}>
           {src ? <img src={src} alt="" draggable={false} /> : <span className="moment__thumb-empty" />}
           <span className="moment__num tabular">{index + 1}</span>
         </span>
@@ -383,7 +382,11 @@ function Preview() {
 
   const aspect = frame ? frame.width / frame.height : 16 / 9;
   return (
-    <div ref={host} className="preview" style={{ aspectRatio: String(Math.min(Math.max(aspect, 0.6), 1.8)) }} aria-hidden="true">
+    <div
+      ref={host}
+      className="preview"
+      style={{ aspectRatio: String(Math.min(Math.max(aspect, 0.6), 1.8)) }}
+    >
       <canvas ref={overlay} className="preview__overlay" />
     </div>
   );
