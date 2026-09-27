@@ -164,7 +164,7 @@ function MomentRow({
         title={KIND_HINT[row.kind]}
         onClick={() => player.jumpToKeyPoint(row.time)}
       >
-        <span className="moment__thumb" style={{ aspectRatio: 9 / 16}}>
+        <span className="moment__thumb" style={{ aspectRatio: String(Math.min(Math.max(video.info.width / video.info.height, 0.6), 1.8)) }}>
           {src ? <img src={src} alt="" draggable={false} /> : <span className="moment__thumb-empty" />}
           <span className="moment__num tabular">{index + 1}</span>
         </span>
