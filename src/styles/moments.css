@@ -1,9 +1,14 @@
 /* The key-moments sidebar: analysis card, sensitivity, and the list of sections. */
 
+/*
+ * A fixed-size box. Its height is set, not derived from its content, so 5 moments or 500
+ * make no difference to the layout around it: the list scrolls inside. The cap keeps it
+ * from being taller than the window on very short screens.
+ */
 .panel {
   display: flex;
   flex-direction: column;
-  min-height: 0;
+  height: min(var(--moments-panel-h), calc(100dvh - var(--toolbar-h) - var(--safe-top) - 32px));
   overflow: hidden;
   border-radius: var(--r-xl);
 }
@@ -17,14 +22,21 @@
 .panel__spacer {
   flex: 1;
 }
+/* Everything under the pinned header scrolls together, inside the fixed panel. */
 .panel__body {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
+  /* Reaching the end of the list shouldn't start scrolling the page behind it. */
+  overscroll-behavior: contain;
   display: flex;
   flex-direction: column;
   gap: 12px;
   padding: 4px 12px 14px;
+}
+/* Sections keep their natural height and overflow (scroll) rather than being squashed. */
+.panel__body > * {
+  flex: none;
 }
 .panel__empty {
   padding: 4px 12px 12px;

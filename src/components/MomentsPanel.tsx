@@ -20,6 +20,7 @@ import { useThumbnail } from '../hooks/useThumbnail';
 import { cx } from '../lib/cx';
 import { formatTime, plural } from '../lib/format';
 import { KIND_HINT, KIND_LABEL, type MomentKind } from '../lib/kinds';
+import { scrollTopToReveal } from '../lib/scroll';
 import { player, usePlayer } from '../state/player';
 import { usePrefs } from '../state/prefs';
 import {
@@ -42,6 +43,9 @@ const KIND_ICON: Record<MomentKind, ReactNode> = {
   manual: <Flag size={14} strokeWidth={2.2} />,
 };
 
+/** After the user scrolls or clicks in the list, it stops following the playhead for this long. */
+const FOLLOW_PAUSE_MS = 2500;
+
 export function MomentsPanel({ video }: { video: LoadedVideo }) {
   const keyPoints = useSession((s) => s.keyPoints);
   const phase = useSession((s) => s.phase);
@@ -61,6 +65,28 @@ export function MomentsPanel({ video }: { video: LoadedVideo }) {
     ...keyPoints,
   ];
 
+  // The panel is a fixed-size box and the list scrolls inside it, so keep the current
+  // section in view as the video plays or the playhead moves. This scrolls only the box,
+  // never the page, and it holds off while the user is scrolling through the list.
+  const body = useRef<HTMLDivElement>(null);
+  const userActiveAt = useRef(0);
+  const noteUserActivity = () => {
+    userActiveAt.current = performance.now();
+  };
+
+  useEffect(() => {
+    const box = body.current;
+    const row = box?.querySelector<HTMLElement>('.moment[data-active="true"]');
+    if (!box || !row || performance.now() - userActiveAt.current < FOLLOW_PAUSE_MS) return;
+
+    const b = box.getBoundingClientRect();
+    const r = row.getBoundingClientRect();
+    const top = scrollTopToReveal(box.scrollTop, b.top, b.bottom, r.top, r.bottom);
+    if (Math.abs(top - box.scrollTop) < 1) return;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    box.scrollTo({ top, behavior: reduceMotion ? 'auto' : 'smooth' });
+  }, [activeIndex]);
+
   return (
     <section className="panel glass" aria-label="Key moments">
       <header className="panel__head">
@@ -77,7 +103,13 @@ export function MomentsPanel({ video }: { video: LoadedVideo }) {
         </IconButton>
       </header>
 
-      <div className="panel__body">
+      <div
+        ref={body}
+        className="panel__body"
+        onWheel={noteUserActivity}
+        onTouchMove={noteUserActivity}
+        onPointerDown={noteUserActivity}
+      >
         <AnalysisCard />
 
         {phase === 'done' && <Sensitivity />}
@@ -122,16 +154,10 @@ function MomentRow({
 }) {
   const src = useThumbnail(video, row.time);
   const looping = usePlayer((s) => s.loop.enabled && Math.abs(s.loop.start - row.time) < 0.05 && Math.abs(s.loop.end - end) < 0.05);
-  const li = useRef<HTMLLIElement>(null);
-
-  // Keep the current section visible while the video plays.
-  useEffect(() => {
-    if (active && usePlayer.getState().playing) li.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-  }, [active]);
 
   const length = Math.max(0, end - row.time);
   return (
-    <li ref={li} className="moment" data-active={active} data-kind={row.kind}>
+    <li className="moment" data-active={active} data-kind={row.kind}>
       <button
         type="button"
         className="moment__main"

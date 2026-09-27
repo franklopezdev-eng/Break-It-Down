@@ -92,6 +92,9 @@
 
   /* ── Layout ───────────────────────────────────────────────────────────── */
   --toolbar-h: 60px;
+  /* Height of the Key Moments panel. It's a fixed-size box: the list scrolls inside it, so
+     the panel never grows with the number of moments. Make it smaller or larger here. */
+  --moments-panel-h: 480px;
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --safe-left: env(safe-area-inset-left, 0px);
