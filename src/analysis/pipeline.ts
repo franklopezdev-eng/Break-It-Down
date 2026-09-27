@@ -40,7 +40,7 @@ export interface PipelineOptions {
 }
 
 /** Cap on frames analysed per video so long clips stay quick. */
-const FRAME_BUDGET = 1800;
+const FRAME_BUDGET = 3600;
 const MIN_RATE = 6;
 const MAX_RATE = 15;
 /** Frame-difference pixel changes below this (of 255) are treated as sensor noise. */
