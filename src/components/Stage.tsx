@@ -37,7 +37,7 @@ export function Stage({ video }: StageProps) {
     return () => observer.disconnect();
   }, []);
 
-  const videoAspect = 16/9;
+  const videoAspect = video ? video.info.width / video.info.height : cameraAspect;
   const mirrorAspect = !video || layout === 'mirror' || fit === 'full' ? cameraAspect : videoAspect;
   const arrangement = chooseArrangement(size.width, size.height, videoAspect, mirrorAspect);
   const style = { '--ar-video': videoAspect, '--ar-mirror': mirrorAspect } as CSSProperties;
