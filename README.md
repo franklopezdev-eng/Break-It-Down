@@ -125,6 +125,13 @@ Current Safari, Chrome, Edge and Firefox. A few notes:
 - **No key moments found.** Raise the sensitivity. Very static or heavily edited videos have little
   movement to find; you can always add moments yourself with `A`.
 
+## Credits
+
+The base application — architecture, analysis pipeline, UI and tests — was written by
+[Claude](https://claude.com/claude-code) in a single session on 2026-09-26, with no human-written
+code (commit `da00bad`, "base version, needs verification"). Everything since has been iterated on
+by the team.
+
 ## License
 
 Personal project. MediaPipe is licensed under Apache 2.0; Inter is licensed under the SIL Open Font License.
