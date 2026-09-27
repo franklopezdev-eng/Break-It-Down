@@ -1,4 +1,5 @@
 import {
+  ArrowUpToLine,
   Check,
   Flag,
   Flame,
@@ -166,13 +167,13 @@ function MomentRow({
         </IconButton>
         {row.kind !== 'start' && (
           <IconButton
-            label={`Remove key moment at ${formatTime(row.time, 1)}`}
+            label={`Merge key moment into above at ${formatTime(row.time, 1)}`}
             size="sm"
             tone="plain"
             className="moment__remove"
             onClick={() => removeKeyPoint(row.id)}
           >
-            <X size={15} strokeWidth={2.4} />
+            <ArrowUpToLine size={15} strokeWidth={2.4} />
           </IconButton>
         )}
       </div>

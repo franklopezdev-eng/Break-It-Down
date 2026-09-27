@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-export type Layout = 'video' | 'split' | 'overlay' | 'mirror';
+export type Layout = 'video' | 'split' | 'overlay';
 
 export interface PrefValues {
   layout: Layout;
