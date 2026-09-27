@@ -43,17 +43,7 @@ export function ImportView() {
             {opening ? <span className="spinner spinner--on-accent" /> : <Upload size={20} strokeWidth={2.2} />}
             {opening ? 'Opening…' : 'Choose Video'}
           </button>
-          <button
-            type="button"
-            className="btn btn--tinted btn--lg"
-            onClick={() => {
-              setMirrorOnly(true);
-              void startWebcam();
-            }}
-          >
-            <Camera size={20} strokeWidth={2.2} />
-            Open Mirror
-          </button>
+          
         </div>
 
         <p className="t-footnote t-tertiary import__drop">or drop a video anywhere on this page · MP4, MOV or WebM</p>

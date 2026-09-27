@@ -23,7 +23,7 @@ const LAYOUT_OPTIONS: SegmentOption<Layout>[] = [
   { value: 'video', label: 'Video', title: 'Choreography only', icon: <Film size={15} strokeWidth={2.2} /> },
   { value: 'split', label: 'Split', title: 'Side by side', icon: <Columns2 size={15} strokeWidth={2.2} /> },
   { value: 'overlay', label: 'Overlay', title: 'Mirror underneath the choreography', icon: <Layers size={15} strokeWidth={2.2} /> },
-  { value: 'mirror', label: 'Mirror', title: 'Mirror only', icon: <Camera size={15} strokeWidth={2.2} /> },
+  
 ];
 
 export function Toolbar() {
@@ -36,7 +36,7 @@ export function Toolbar() {
   const chooseLayout = (next: Layout) => {
     set('layout', next);
     // Picking a mirror layout is a clear request to see yourself.
-    if ((next === 'mirror' || next === 'overlay') && useWebcam.getState().status === 'off') void startWebcam();
+    if ((next === 'overlay') && useWebcam.getState().status === 'off') void startWebcam();
   };
 
   return (
